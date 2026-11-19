@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Taller Power BI + IA · Módulo 1: Historia hasta PBIP + IA</title>
+<style>
+:root{
+  --bg:#14151a; --bg2:#1b1c23; --card:rgba(255,255,255,.045); --line:rgba(255,255,255,.12);
+  --gold:#F2C811; --gold-dim:rgba(242,200,17,.16); --text:#f3f4f7; --mute:#9a9ca8; --violet:#a89bf0; --green:#6fd6a3;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:"Segoe UI",Inter,system-ui,sans-serif;overflow:hidden}
+body::before{content:"";position:fixed;inset:0;background:
+  radial-gradient(900px 500px at 85% 20%,rgba(242,200,17,.10),transparent 60%),
+  radial-gradient(700px 500px at 0% 100%,rgba(168,155,240,.07),transparent 60%);pointer-events:none}
+/* top bar */
+header{position:fixed;top:0;left:0;right:0;padding:22px 44px 0;z-index:10}
+.brand{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.logo{width:38px;height:38px;border-radius:10px;background:var(--gold);display:grid;place-items:center}
+.logo svg{width:20px;height:20px}
+.brand b{display:block;font-size:17px;font-weight:600}
+.brand small{color:var(--mute);font-size:12px}
+nav{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+.tab{display:flex;align-items:center;gap:12px;padding:11px 16px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.025);cursor:pointer;color:var(--mute);transition:.25s}
+.tab .n{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--mute);display:grid;place-items:center;font-size:11px;font-weight:700;flex:none}
+.tab b{display:block;font-size:14px;font-weight:600}
+.tab small{font-size:10px;letter-spacing:.08em;text-transform:uppercase;opacity:.75}
+.tab:hover{border-color:rgba(242,200,17,.5)}
+.tab.on{background:var(--gold-dim);border-color:var(--gold);color:var(--text)}
+.tab.on .n{background:var(--gold);border-color:var(--gold);color:#14151a}
+.tab.done .n{border-color:var(--gold);color:var(--gold)}
+/* slides */
+main{position:absolute;inset:0}
+.slide{position:absolute;inset:0;padding:clamp(178px,21vh,210px) 72px 70px;display:flex;flex-direction:column;justify-content:flex-start;opacity:0;visibility:hidden;transform:translateX(30px);transition:opacity .45s,transform .45s,visibility .45s}
+.slide.on{opacity:1;visibility:visible;transform:none}
+.slide.past{transform:translateX(-30px)}
+.eyebrow{color:var(--gold);font-weight:800;letter-spacing:.18em;font-size:15px;text-transform:uppercase;margin-bottom:14px}
+h1,h2{font-weight:700;line-height:1.08;letter-spacing:-.01em;max-width:1100px}
+h1{font-size:clamp(38px,5.4vw,72px)}
+h2{font-size:clamp(32px,4.2vw,56px);margin-bottom:34px}
+em{color:var(--gold);font-style:normal}
+.lead{color:var(--mute);font-size:clamp(16px,1.6vw,22px);margin-top:22px;max-width:820px;line-height:1.5}
+.row{display:flex;gap:28px;align-items:stretch;flex-wrap:wrap}
+.col{flex:1 1 380px;min-width:300px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px 24px;backdrop-filter:blur(4px)}
+.card h3{font-size:19px;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.card p{color:var(--mute);font-size:16px;line-height:1.5}
+.tag{font-size:11px;font-weight:700;padding:3px 9px;border-radius:99px;background:rgba(168,155,240,.2);color:var(--violet);letter-spacing:.06em}
+.tag.g{background:var(--gold-dim);color:var(--gold)} .tag.k{background:rgba(111,214,163,.16);color:var(--green)}
+ul.pts{list-style:none;display:grid;gap:14px}
+ul.pts li{display:block;position:relative;padding-left:24px;font-size:clamp(16px,1.6vw,21px);line-height:1.45}
+ul.pts li::before{content:"";position:absolute;left:0;top:.6em;width:9px;height:9px;border-radius:50%;background:var(--gold)}
+code{font-family:Consolas,"Cascadia Code",monospace;font-size:.88em;background:rgba(255,255,255,.08);padding:1px 6px;border-radius:6px;color:var(--gold)}
+pre{font-family:Consolas,"Cascadia Code",monospace;font-size:clamp(12px,1.2vw,16px);line-height:1.65;color:#d9dbe4;white-space:pre;overflow:hidden}
+pre .k{color:var(--violet)} pre .s{color:var(--green)} pre .c{color:var(--mute)} pre .g{color:var(--gold)}
+.codehead{display:flex;gap:7px;margin-bottom:14px}.codehead i{width:11px;height:11px;border-radius:50%;background:#3a3c47}
+.cap{font-size:12px;color:var(--mute);margin-top:12px}
+.big{font-size:clamp(46px,6vw,84px);font-weight:800;color:var(--gold);line-height:1}
+.arrow{align-self:center;color:var(--gold);font-size:34px}
+/* timeline */
+.tl{display:grid;grid-template-columns:repeat(6,1fr);gap:0;position:relative;margin-top:8px}
+.tl::before{content:"";position:absolute;left:4%;right:4%;top:15px;height:2px;background:var(--line)}
+.tl .pt{position:relative;text-align:center;padding:0 8px}
+.tl .dot{width:30px;height:30px;border-radius:50%;background:var(--bg);border:2px solid var(--gold);margin:0 auto 14px;position:relative;z-index:1;display:grid;place-items:center;color:var(--gold);font-size:12px;font-weight:800}
+.tl b{display:block;font-size:15px;color:var(--gold)} .tl span{font-size:14px;color:var(--text);display:block;margin-top:4px;line-height:1.35}
+.tl small{display:block;color:var(--mute);font-size:12px;margin-top:4px}
+a{color:var(--gold)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.grid .card{padding:16px 18px}.grid .card h3{font-size:17px}.grid .card p{font-size:14px}
+.grid .card small{display:block;color:var(--gold);font-size:12px;margin-bottom:6px;letter-spacing:.04em}
+.en{color:var(--text);font-weight:600;font-size:15px;display:block;margin-top:2px}
+.es{color:var(--mute);font-size:14px;display:block;margin-top:2px}
+.homes{margin-left:auto;display:flex;gap:10px}.home.next{border-color:var(--gold);color:var(--gold);background:var(--gold-dim)}
+.home{display:inline-flex;gap:6px;align-items:center;padding:8px 14px;border:1px solid var(--line);border-radius:10px;color:var(--text);text-decoration:none;font-size:13px}
+.home:hover{border-color:var(--gold);color:var(--gold)}
+.callout{border-left:3px solid var(--gold);padding:10px 16px;background:var(--gold-dim);border-radius:0 12px 12px 0;font-size:16px;margin-top:18px}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(242,200,17,.55)}70%{box-shadow:0 0 0 14px rgba(242,200,17,0)}100%{box-shadow:0 0 0 0 rgba(242,200,17,0)}}
+.demo-badge{display:inline-flex;align-items:center;gap:8px;background:var(--gold);color:#14151a;font-weight:800;font-size:14px;letter-spacing:.08em;padding:8px 16px;border-radius:99px;animation:pulse 1.8s infinite;white-space:nowrap}
+.eyebrow.demo{display:flex;align-items:center;gap:12px}
+.eyebrow.demo::before{content:"";width:12px;height:12px;border-radius:50%;background:#ff5a4f;animation:pulse 1.4s infinite}
+.demobar{border:2px solid var(--gold);border-radius:16px;background:rgba(242,200,17,.10);padding:12px 18px;margin-top:16px;animation:pulse 2.2s infinite}
+.demobar .dlabel{font-weight:800;color:var(--gold);letter-spacing:.06em;font-size:15px;display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.demobar .rec{width:11px;height:11px;border-radius:50%;background:#ff5a4f;animation:pulse 1.4s infinite}
+.dchips{display:flex;flex-wrap:wrap;gap:8px 14px;font-size:15px}
+.dchips span{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.07);border-radius:99px;padding:5px 14px 5px 6px}
+.dchips i{font-style:normal;width:22px;height:22px;border-radius:50%;background:var(--gold);color:#14151a;font-weight:800;font-size:12px;display:grid;place-items:center}
+.demobar .dnote{margin-top:8px;font-size:13px;color:var(--mute)}
+.dsteps{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.dstep{background:var(--card);border:1px solid var(--gold);border-radius:18px;padding:18px 20px}
+.dstep .num{width:36px;height:36px;border-radius:50%;background:var(--gold);color:#14151a;font-weight:800;display:grid;place-items:center;margin-bottom:12px}
+.dstep h3{font-size:18px;margin-bottom:6px}.dstep p{color:var(--mute);font-size:14px;line-height:1.5}
+.warn{border-left:3px solid #ff8a5b;background:rgba(255,138,91,.12);padding:10px 16px;border-radius:0 12px 12px 0;font-size:15px;margin-top:14px;line-height:1.5}
+@media(max-width:900px){.dsteps{grid-template-columns:1fr 1fr}}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+@media(max-height:660px){.slide{overflow-y:auto}.cap{display:none}.slide{padding:128px 40px 40px}h1{font-size:44px}h2{font-size:34px;margin-bottom:16px}pre{font-size:11.5px;line-height:1.45}.card{padding:12px 16px}.card p{font-size:14px}ul.pts{gap:9px}ul.pts li{font-size:15px}.lead{font-size:15px;margin-top:12px}.callout{font-size:14px;margin-top:12px}header{padding:14px 28px 0}.brand{margin-bottom:10px}.tab{padding:7px 12px}}
+.src li{font-size:13px;color:var(--mute);line-height:1.5}
+.src ul{list-style:none;display:grid;gap:7px;columns:2;column-gap:36px}
+/* steps */
+.step{opacity:0;transform:translateY(18px);transition:opacity .5s,transform .5s;pointer-events:none}
+.step.show{opacity:1;transform:none;pointer-events:auto}
+/* footer */
+footer{position:fixed;left:0;right:0;bottom:0;padding:0 44px 18px;display:flex;justify-content:space-between;align-items:center;color:var(--mute);font-size:12px;z-index:10}
+.bar{position:fixed;left:0;bottom:0;height:3px;background:var(--gold);transition:width .4s;z-index:11}
+.hint{opacity:.7}
+@media(max-width:900px){header{padding:14px 18px 0}.slide{padding:150px 24px 60px}.tab small{display:none}.tl{grid-template-columns:1fr 1fr;gap:20px}.tl::before{display:none}}
+.analogy{width:100%;max-height:310px;display:block}
+.analogy .bx{fill:rgba(255,255,255,.045);stroke:rgba(255,255,255,.12);stroke-width:1.5}
+.analogy .bx.g{fill:rgba(242,200,17,.16);stroke:#F2C811}
+.analogy .bx.v{fill:rgba(168,155,240,.14);stroke:#a89bf0}
+.analogy .t{fill:#f3f4f7;font-weight:700;font-size:20px;font-family:inherit}
+.analogy .s{fill:#9a9ca8;font-size:14px;font-family:inherit}
+.analogy .lb{fill:#F2C811;font-size:13px;font-weight:700;font-family:inherit}
+.analogy .ln{stroke:#F2C811;stroke-width:2;fill:none;marker-end:url(#ar)}
+.srcgrid{display:grid;grid-template-columns:1fr 1fr;gap:0 36px;align-items:start}
+.grp{margin-bottom:14px}.grp h3{color:var(--gold);font-size:14px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+.grp ul{list-style:none;display:grid;gap:5px}.grp li{font-size:13px;color:var(--mute);line-height:1.45;overflow-wrap:anywhere}
+.grp li b{color:var(--text)}
+pre.tmdl{font-size:13px;line-height:1.34;tab-size:3;-moz-tab-size:3;overflow-x:auto;user-select:text;-webkit-user-select:text;cursor:text}
+pre.mini{font-size:12.5px;line-height:1.4;display:block;width:-moz-fit-content;width:fit-content;max-width:100%;margin:8px 0 0;padding:7px 14px;background:rgba(255,255,255,.05);border-left:3px solid var(--gold);border-radius:6px 10px 10px 6px;color:#d9dbe4;white-space:pre}
+ul.pts li.sub{font-size:clamp(14px,1.25vw,17px);color:var(--mute);line-height:1.45}
+ul.pts li.sub::before{display:none}
+ul.pts.tight{gap:9px}ul.pts.tight li{font-size:clamp(15px,1.4vw,19px)}ul.pts.tight li.sub{font-size:clamp(13px,1.1vw,15px)}
+ul.pts.tight li::before{top:.55em}
+ul.pts li.sub b{color:var(--text)}
+ul.pts li.sub .def{display:block}
+ul.pts li.sub{margin-bottom:2px}
+@media(max-height:740px){ul.pts.tight{gap:6px}ul.pts.tight li{font-size:15px}ul.pts.tight li.sub{font-size:13px}pre.tmdl{font-size:12.5px;line-height:1.3}}
+.codehead{align-items:center}
+.copybtn{margin-left:auto;font:inherit;font-size:12px;font-weight:700;color:var(--gold);background:var(--gold-dim);border:1px solid var(--gold);border-radius:8px;padding:4px 10px;cursor:pointer}
+.copybtn:hover{background:var(--gold);color:#14151a}
+.cmp pre{font-size:clamp(12px,1.05vw,14.5px);line-height:1.5}.cmp .card{padding:14px 20px}
+@media(max-height:700px){.cmp pre{font-size:12px;line-height:1.38}.cmp .card{padding:10px 18px}.cmp .cap{display:none}.diff3{margin-top:6px;padding:8px 14px}.diff3 .dh{margin-bottom:3px}}
+.diff3{margin-top:10px;border:1px solid var(--gold);background:var(--gold-dim);border-radius:14px;padding:10px 16px}
+.diff3 .dh{font-size:clamp(14px,1.2vw,16px);color:var(--text);margin-bottom:6px}
+.diff3 .dk{color:var(--gold);font-weight:800;letter-spacing:.08em;text-transform:uppercase;font-size:.85em;margin-right:8px}
+.diff3 .dg{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+.diff3 .dg>div{padding:2px 16px;border-left:1px solid rgba(242,200,17,.35)}
+.diff3 .dg>div:first-child{border-left:0;padding-left:0}
+.diff3 small{display:block;color:var(--mute);font-size:12px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px}
+.diff3 p{font-size:clamp(13px,1.1vw,15px);line-height:1.45;color:var(--text);margin:0}
+.gabadge{margin-top:14px;padding:10px 14px;border-radius:10px;background:rgba(46,204,113,.12);border:1px solid #2ecc71;font-size:14px;line-height:1.4;color:var(--text)}
+.gabadge .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#2ecc71;margin-right:6px}
+.btn{fill:rgba(255,255,255,.08);stroke:rgba(255,255,255,.25);stroke-width:1}
+.btn.on{fill:var(--gold);stroke:var(--gold)}
+.bt{fill:#e7e8ee;font-size:11.5px;font-family:inherit;font-weight:600}
+.bt.on{fill:#14151a}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="logo"><svg viewBox="0 0 24 24" fill="#14151a"><rect x="3" y="12" width="4" height="9" rx="1"/><rect x="10" y="6" width="4" height="15" rx="1"/><rect x="17" y="2" width="4" height="19" rx="1"/></svg></div>
+    <div><b>Power BI + IA · Taller práctico</b><small>Módulo 1 · De PBIX a PBIP: la historia</small></div>
+    <div class="homes"><a class="home" href="index.html" onclick="event.stopPropagation()">← Inicio</a><a class="home next" href="02_lo_que_necesitamos.html" onclick="event.stopPropagation()">Siguiente: Lo que necesitamos →</a></div>
+  </div>
+  <nav id="nav"></nav>
+</header>
+<main id="main">
+
+<!-- ============ 01 ORIGEN ============ -->
+<section class="slide" data-sec="0">
+  <div class="eyebrow">Módulo 1 · Historia</div>
+  <h1>De un archivo binario a un modelo que la <em>IA</em> puede editar</h1>
+  <p class="lead step">El recorrido: <b>TMSL</b> → <b>TMDL</b> → <b>PBIP</b> → <b>PBIR</b> → <b>MCP</b>. Entenderlo explica por qué hoy podemos construir un reporte completo con Claude.</p>
+</section>
+
+<section class="slide" data-sec="0">
+  <div class="eyebrow">Punto de partida</div>
+  <h2 style="margin-bottom:24px">El <em>.pbix</em>: una caja cerrada</h2>
+  <div class="row" style="flex-wrap:nowrap">
+    <div class="col card step"><h3>📦 .pbix <span class="tag">BINARIO</span></h3>
+      <p>Un único archivo con todo junto. Para Git o una IA, es una caja negra.</p>
+      <pre style="margin-top:8px;line-height:1.42"><span class="g">Ventas.pbix</span>  <span class="c">(1 solo archivo)</span>
+ ├ DataModel   <span class="c">← binario comprimido</span>
+ ├ Report/Layout <span class="c">← un JSON enorme</span>
+ ├ DataMashup  <span class="c">← Power Query</span>
+ ├ Connections
+ └ Metadata</pre>
+      </div>
+  </div>
+  <div class="callout step" style="margin-top:12px"><b>Consecuencia:</b> difícil de leer, de editar y casi imposible de trabajar entre varias personas.</div>
+  <div class="demobar step" style="margin-top:12px"><div class="dlabel" style="margin:0;font-size:17px"><span class="rec"></span>🎬 DEMO EN VIVO · abrir el .pbix como ZIP</div></div>
+</section>
+
+
+
+<section class="slide" data-sec="0">
+  <div class="eyebrow">El formato de siempre</div>
+  <h2><em>TMSL</em>: el lenguaje del model.bim</h2>
+  <p class="lead step" style="margin:-14px 0 10px;color:var(--text);max-width:1050px"><b>TMSL</b> son las siglas de <em>Tabular Model Scripting Language</em> (Lenguaje de scripting de modelos tabulares): el formato JSON en el que se guardaba el <b>model.bim</b>.</p>
+  <div class="row">
+    <div class="col">
+      <ul class="pts">
+        <li class="step">Un <b>único archivo</b>, a menudo muy grande, con todos los metadatos del modelo</li>
+        <li class="step">Difícil de leer y de editar, y un obstáculo para <b>trabajar varios desarrolladores</b> sobre el mismo modelo</li>
+      </ul>
+    </div>
+    <div class="col card step"><h3>🧾 model.bim <span class="tag g">TMSL · JSON</span></h3>
+      <p>Al extraer el modelo salía un único JSON, muy grande.</p>
+      <pre style="margin-top:8px;line-height:1.42">{
+  <span class="g">"name"</span>: <span class="s">"SemanticModel"</span>,
+  <span class="g">"model"</span>: { <span class="g">"tables"</span>: [
+    { <span class="g">"name"</span>: <span class="s">"Ventas"</span>,
+      <span class="g">"columns"</span>: [ ... ],
+      <span class="g">"measures"</span>: [ ... ] },
+    <span class="c">... cientos de líneas más</span></pre>
+      </div>
+  </div>
+  <div class="demobar step" style="margin-top:8px"><div class="dlabel" style="margin:0;font-size:17px"><span class="rec"></span>🎬 DEMO EN VIVO · crear un archivo model.bim con Tabular Editor</div></div>
+</section>
+
+<section class="slide" data-sec="0">
+  <div class="eyebrow">Antes de TMDL</div>
+  <h2><em>TOM</em>: la API detrás del modelo</h2>
+  <p class="lead step" style="margin:-14px 0 22px;color:var(--text);max-width:1050px"><b>TOM</b> son las siglas de <em>Tabular Object Model</em> (Modelo de Objetos Tabulares). Es una biblioteca de <b>.NET</b> de Microsoft que permite administrar y modificar, mediante programación, la estructura de los modelos semánticos (modelos tabulares).</p>
+  <div class="eyebrow step" style="margin-bottom:12px;color:var(--text);letter-spacing:.06em;font-size:19px;text-transform:none">¿Para qué sirve?</div>
+  <div class="grid">
+    <div class="card step"><h3>⚙️ Automatización</h3><p>Crear, actualizar y modificar tablas, columnas, relaciones y medidas DAX de forma automática mediante código (C# o .NET), en lugar de hacerlo manualmente en la interfaz.</p></div>
+    <div class="card step"><h3>🧰 Herramientas externas</h3><p>Es la base que usan aplicaciones muy populares de la comunidad para extender Power BI, como Tabular Editor o ALM Toolkit.</p></div>
+    <div class="card step"><h3>🔌 Conexión por XMLA</h3><p><b>XMLA</b> es el protocolo para hablar con el motor del modelo. En <b>Power BI Desktop</b>, TOM se conecta al motor local de tu archivo. En el <b>servicio</b>, usa el <i>punto de conexión XMLA</i> (Premium o Fabric).</p></div>
+  </div>
+  <div class="callout step">Después, TMDL se sumó como métodos nuevos de TOM, y hoy el MCP de modelado sigue apoyándose en TOM y ADOMD.NET.</div>
+</section>
+
+
+<section class="slide" data-sec="0">
+  <div class="eyebrow">Analogía · TOM y TMSL</div>
+  <h2 style="margin-bottom:14px">TOM y TMSL: <em>el restaurante</em></h2>
+  <p class="lead step" style="margin:-6px 0 6px;color:var(--text);max-width:1100px">Imagina que el modelo es una <b>cocina</b> y quieres <b>pedirle un cambio</b>. Hay dos formas de hacer el pedido.</p>
+  <svg class="analogy" viewBox="0 0 1180 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Analogía del restaurante: TOM es el mesero, TMSL es la hoja de pedido, XMLA es la ventanilla y el motor es la cocina">
+    <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#F2C811"/></marker></defs>
+    <g class="step">
+      <rect class="bx" x="0" y="105" width="150" height="80" rx="16"/>
+      <text class="t" x="75" y="143" text-anchor="middle">🙋 Tú</text>
+      <text class="s" x="75" y="167" text-anchor="middle">quien pide el cambio</text>
+      <rect class="bx g" x="930" y="95" width="250" height="100" rx="16"/>
+      <text class="t" x="1055" y="131" text-anchor="middle">👨‍🍳 Motor · la cocina</text>
+      <text class="s" x="1055" y="157" text-anchor="middle">Acepta ambos pedidos y</text>
+      <text class="s" x="1055" y="177" text-anchor="middle">aplica el cambio en el modelo</text>
+    </g>
+    <g class="step">
+      <path class="ln" d="M150 130 C192 130 192 65 230 65"/>
+      <text class="lb" x="154" y="108">C#</text>
+      <rect class="bx v" x="230" y="15" width="290" height="100" rx="16"/>
+      <text class="t" x="375" y="50" text-anchor="middle">🤵 TOM · el mesero</text>
+      <text class="s" x="375" y="76" text-anchor="middle">Tu tablet con el menú del modelo;</text>
+      <text class="s" x="375" y="96" text-anchor="middle">solo lleva a cocina lo que cambió</text>
+    </g>
+    <g class="step">
+      <path class="ln" d="M150 160 C192 160 192 225 230 225"/>
+      <text class="lb" x="150" y="212">JSON</text>
+      <rect class="bx g" x="230" y="175" width="290" height="100" rx="16"/>
+      <text class="t" x="375" y="210" text-anchor="middle">📝 TMSL · la hoja de pedido</text>
+      <text class="s" x="375" y="236" text-anchor="middle">El mismo pedido, escrito a mano</text>
+      <text class="s" x="375" y="256" text-anchor="middle">en JSON, que la cocina entiende</text>
+    </g>
+    <g class="step">
+      <path class="ln" d="M520 65 C556 65 556 125 585 125"/>
+      <path class="ln" d="M520 225 C556 225 556 165 585 165"/>
+      <rect class="bx" x="585" y="95" width="260" height="100" rx="16"/>
+      <text class="t" x="715" y="131" text-anchor="middle">🛎️ XMLA · la ventanilla</text>
+      <text class="s" x="715" y="157" text-anchor="middle">Protocolo (XML for Analysis)</text>
+      <text class="s" x="715" y="177" text-anchor="middle">por donde llegan los pedidos</text>
+      <path class="ln" d="M845 145 L928 145"/>
+    </g>
+  </svg>
+  <div class="callout step" style="margin-top:6px">Ejemplo: <i>«20 mesas con el mismo plato, sin cebolla»</i>. Con <b>TOM</b> lo pides en código y envía solo lo que cambió; con <b>TMSL</b> escribes tú la hoja de pedido. Ambos llegan por <b>XMLA</b>.</div>
+</section>
+
+<!-- ============ 02 TMDL ============ -->
+<section class="slide" data-sec="1" style="padding-top:clamp(154px,19vh,190px)">
+  <div class="eyebrow">2023 · Preview público</div>
+  <h2 style="margin-bottom:18px">Nace <em>TMDL</em></h2>
+  <p class="lead step" style="margin:-14px 0 12px;color:var(--text);max-width:1050px;font-size:clamp(15px,1.4vw,19px)"><b>TMDL</b> son las siglas de <em>Tabular Model Definition Language</em> (Lenguaje de definición de modelos tabulares): un formato de texto legible para definir el modelo.</p>
+  <div class="row">
+    <div class="col" style="flex:1 1 340px">
+      <ul class="pts tight">
+        <li class="step">Formato <b>legible</b>, con sintaxis tipo YAML</li>
+        <li class="step sub"><span class="def"><b>YAML</b> (<i>YAML Ain't Markup Language</i>): formato de texto para escribir datos donde la <b>sangría</b> indica qué va dentro de qué. Como una ficha: cada línea es «campo: valor».</span>
+<pre class="mini"><span class="g">alumno</span>: Ana
+<span class="g">curso</span>:
+    <span class="g">nombre</span>: Power BI
+    <span class="g">tema</span>: TMDL</pre></li>
+        <li class="step">Estructura de <b>carpetas</b>: un archivo por objeto del modelo</li>
+        <li class="step">Pensado para <b>control de versiones</b> y varios desarrolladores</li>
+      </ul>
+    </div>
+    <div class="col card step copybox" style="flex:1.5 1 480px;padding:14px 20px">
+      <div class="codehead"><i></i><i></i><i></i><button class="copybtn" type="button">Copiar script</button></div>
+<pre class="tmdl"><span class="k">createOrReplace</span>
+
+	<span class="k">table</span> Palabras
+
+		<span class="k">column</span> Palabra
+			<span class="g">dataType</span>: string
+			<span class="g">isNameInferred</span>
+			<span class="g">sourceColumn</span>: [Palabra]
+
+		<span class="k">partition</span> Palabras = <span class="g">calculated</span>
+			<span class="g">mode</span>: import
+			<span class="g">source</span> = DATATABLE(<span class="s">"Palabra"</span>, STRING, {{<span class="s">"DAX"</span>}, {<span class="s">"VIVE"</span>}})</pre>
+      <div class="cap">Pégalo en la vista TMDL de Power BI: crea la tabla <b>Palabras</b> con dos filas, DAX y VIVE</div>
+    </div>
+  </div>
+  <div class="demobar step" style="margin-top:12px"><div class="dlabel" style="margin:0;font-size:17px"><span class="rec"></span>🎬 DEMO EN VIVO · recorrer la vista TMDL de Power BI, parte por parte</div></div>
+</section>
+
+<section class="slide" data-sec="1" style="padding-top:clamp(154px,19vh,190px)">
+  <div class="eyebrow">Antes y después</div>
+  <h2 style="margin-bottom:16px">La misma tabla, <em>dos formatos</em></h2>
+  <div class="row cmp" style="flex-wrap:nowrap">
+    <div class="col card step"><h3>TMSL <span class="tag g">ANTES · JSON</span></h3>
+<pre>{
+  <span class="g">"name"</span>: <span class="s">"Ventas"</span>,
+  <span class="g">"columns"</span>: [ { <span class="g">"name"</span>: <span class="s">"Monto"</span> } ],
+  <span class="g">"measures"</span>: [ {
+    <span class="g">"name"</span>: <span class="s">"Ventas Totales"</span>,
+    <span class="g">"expression"</span>: <span class="s">"SUM(Ventas[Monto])"</span>,
+    <span class="g">"formatString"</span>: <span class="s">"#,0"</span> } ]
+}</pre><div class="cap">Dentro de un model.bim gigante</div></div>
+    <div class="col card step"><h3>TMDL <span class="tag k">AHORA · TEXTO</span></h3>
+<pre><span class="k">table</span> Ventas
+    <span class="k">column</span> Monto
+    <span class="k">measure</span> <span class="s">'Ventas Totales'</span> =
+        SUM(Ventas[Monto])
+        <span class="g">formatString</span>: #,0</pre><div class="cap">Su propio archivo: Ventas.tmdl</div></div>
+  </div>
+  <div class="callout step">Cambiar una medida pasa a ser <b>una línea revisable en Git</b>, y una IA la lee y la edita sin tocar nada más.</div>
+  <div class="diff3 step">
+    <div class="dh"><span class="dk">Diferencia clave</span> Es el mismo modelo escrito de dos maneras</div>
+    <div class="dg">
+      <div><small>📁 Archivos</small><p><b>TMSL</b>: un solo JSON gigante<br><b>TMDL</b>: un archivo por objeto</p></div>
+      <div><small>✍️ Fórmulas</small><p><b>TMSL</b>: texto entre comillas<br><b>TMDL</b>: escritas tal cual, legibles</p></div>
+      <div><small>🎯 Pensado para</small><p><b>TMSL</b>: dar órdenes al motor (XMLA)<br><b>TMDL</b>: personas, Git y la IA</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 03 PBIP ============ -->
+<section class="slide" data-sec="2">
+  <div class="eyebrow">Junio 2023 · Preview</div>
+  <h2>Desktop <em>Developer Mode</em> y el .pbip</h2>
+  <p class="lead step" style="margin:-14px 0 22px;color:var(--text);max-width:1050px"><b>PBIP</b> son las siglas de <em>Power BI Project</em> (Proyecto de Power BI): guardar el trabajo como una carpeta de archivos de texto en lugar de un solo archivo binario.</p>
+  <div class="row">
+    <div class="col">
+      <ul class="pts">
+        <li class="step">Nueva opción: <b>guardar como Power BI Project (.pbip)</b></li>
+        <li class="step">Modelo y reporte como <b>archivos de texto</b>, no binarios</li>
+        <li class="step">Habilita <b>Git, revisión de código y CI/CD</b></li>
+        <li class="step">Desktop no trae Git nativo: se usa una herramienta externa como <b>VS Code</b></li>
+      </ul>
+    </div>
+    <div class="col card step"><div class="big">.pbip</div>
+      <div class="gabadge"><span class="dot"></span> GA desde el <b>1 de septiembre de 2026</b>: ya no es preview, es la forma estándar de guardar el proyecto.</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-sec="2" style="padding-top:clamp(150px,19vh,190px)">
+  <div class="eyebrow">2024 · TMDL + PBIR</div>
+  <h2>El proyecto se vuelve <em>carpeta de texto</em></h2>
+  <p class="lead step" style="margin:-14px 0 22px;color:var(--text);max-width:1050px"><b>PBIR</b> son las siglas de <em>Power BI enhanced report format</em> (Formato mejorado de reporte de Power BI): guarda el reporte como archivos JSON.</p>
+  <div class="row">
+    <div class="col">
+      <ul class="pts">
+        <li class="step">TMDL en PBIP (preview): <b>model.bim se reemplaza</b> por la carpeta <code>definition</code></li>
+        <li class="step"><b>PBIR</b> (junio 2024): el reporte pasa a JSON por página, visual y marcador</li>
+        <li class="step">Cada archivo tiene <b>esquema JSON público</b>: VS Code valida mientras editas</li>
+        <li class="step">Un proyecto <b>PBIP</b> contiene ambos: el modelo en <b>TMDL</b> y el reporte en <b>PBIR</b>, cada uno en su propia carpeta</li>
+      </ul>
+    </div>
+    <div class="col card step">
+      <div class="codehead"><i></i><i></i><i></i></div>
+<pre style="font-size:13px;line-height:1.3"><span class="k">Ventas.Report/</span>
+  definition.pbir  <span class="c">← enlaza al modelo</span>
+  definition/
+    report.json  <span class="c">← filtros y formato del reporte</span>
+    version.json
+    pages/
+      pages.json  <span class="c">← orden, página activa</span>
+      <span class="g">Página1/</span>
+        page.json  <span class="c">← filtros de la página</span>
+        visuals/
+          <span class="g">Visual1/</span>
+            visual.json  <span class="c">← posición, formato, consulta</span></pre>
+      <div class="cap">Carpeta <code>.Report</code>, formato PBIR</div>
+    </div>
+  </div>
+  <div class="demobar step" style="margin-top:12px"><div class="dlabel" style="margin:0;font-size:17px"><span class="rec"></span>🎬 DEMO EN VIVO · mostrar la estructura TMDL y PBIR</div></div>
+</section>
+
+<section class="slide" data-sec="2">
+  <div class="eyebrow">2026 · PBIR por defecto → GA</div>
+  <h2>Developer mode y PBIP son <em>oficiales</em></h2>
+  <div class="tl" style="grid-template-columns:repeat(3,1fr)">
+    <div class="pt step"><div class="dot">1</div><b>25 ene 2026</b><span>Reportes nuevos del servicio usan PBIR</span></div>
+    <div class="pt step"><div class="dot">2</div><b>Mar 2026</b><span>Desktop adopta PBIR como formato por defecto</span></div>
+    <div class="pt step"><div class="dot">3</div><b>Sep 2026</b><span>GA de developer mode y del formato PBIP</span><small>Aviso del 1 sep; despliegue mediados–fines de sep</small></div>
+  </div>
+  <p class="lead step">PBIR <b>no reemplaza</b> al PBIX: el PBIX sigue siendo el formato principal, pero guarda internamente el reporte en PBIR.</p>
+</section>
+
+
+<section class="slide" data-sec="2">
+  <div class="eyebrow">Ecosistema · Herramientas externas</div>
+  <h2>Antes de la IA, ya había <em>herramientas externas</em></h2>
+  <div class="grid">
+    <div class="card step"><h3>Tabular Editor <span class="tag k">TE2 gratis · TE3 de pago</span></h3><p>Edita los metadatos del modelo sin cargar datos: ediciones masivas, scripts C#, grupos de cálculo, perspectivas, reglas de buenas prácticas.</p></div>
+    <div class="card step"><h3>DAX Studio <span class="tag k">GRATIS</span></h3><p>Escribe y ejecuta consultas DAX, mide tiempos y analiza el rendimiento. Se abre desde Herramientas externas ya conectado al modelo.</p></div>
+    <div class="card step"><h3>ALM Toolkit <span class="tag">MAQ SOFTWARE</span></h3><p>Compara modelos, fusiona cambios y despliega solo la diferencia (metadatos) sin republicar todo.</p></div>
+    <div class="card step"><h3>Measure Killer <span class="tag g">BRUNNER BI</span></h3><p>Detecta medidas, columnas y tablas sin uso. Puede borrar medidas o generar el script y el código M para quitar columnas.</p></div>
+    <div class="card step"><h3>Bravo <span class="tag k">SQLBI · GRATIS</span></h3><p>Analiza el modelo, formatea DAX masivamente y exporta datos. Incluye el análisis de tamaño tipo VertiPaq Analyzer.</p></div>
+    <div class="card step"><h3>pbi-tools</h3><p>Herramienta de línea de comandos de la comunidad para llevar proyectos Power BI a control de versiones.</p></div>
+  </div>
+</section>
+
+<section class="slide" data-sec="2">
+  <div class="eyebrow">Cómo se conectan</div>
+  <h2>Todas hablan con el modelo por la <em>misma puerta</em></h2>
+  <div class="row">
+    <div class="col">
+      <ul class="pts">
+        <li class="step">Desde 2020, <b>librerías de Microsoft</b> permiten a estas herramientas integrarse con Power BI Desktop</li>
+        <li class="step">Se registran con un archivo <b>JSON</b> y aparecen en la cinta <b>Herramientas externas</b></li>
+        <li class="step">Desde 2021 también editan modelos publicados vía <b>endpoint XMLA</b></li>
+        <li class="step">El <b>MCP de modelado</b> sigue las mismas reglas que las herramientas externas</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout step">Idea clave: la IA no reemplaza estas herramientas; usa la misma puerta (TOM) y las complementa.</div>
+</section>
+
+<!-- ============ 04 IA ============ -->
+<section class="slide" data-sec="3" style="padding-top:clamp(148px,18vh,178px)">
+  <div class="eyebrow">Oct–Nov 2025 · Preview público</div>
+  <h2>Power BI <em>Modeling MCP</em> Server</h2>
+  <p class="lead step" style="margin:-14px 0 22px;color:var(--text);max-width:1050px"><b>MCP</b> son las siglas de <em>Model Context Protocol</em> (Protocolo de contexto de modelos): el estándar abierto que conecta la IA con herramientas y datos.</p>
+  <div class="row">
+    <div class="col">
+      <ul class="pts">
+        <li class="step">Antes del MCP, la IA era <b>solo un chat</b>: no conocía tu modelo ni podía leerlo o modificarlo directamente</li>
+        <li class="step">Repositorio de Microsoft creado el <b>16 oct 2025</b>; lanzado en <b>Ignite 2025</b></li>
+        <li class="step">Conecta agentes de IA a tu modelo: <b>Desktop, Fabric o archivos PBIP</b></li>
+        <li class="step">Tablas, relaciones, medidas, <b>operaciones masivas y validación de DAX</b></li>
+        <li class="step">Usa las mismas APIs de siempre (<b>TOM y ADOMD.NET</b>), con acceso estandarizado</li>
+      </ul>
+    </div>
+    <div class="col card step"><h3>⚠️ Alcance</h3><p>Solo modela. <b>No modifica páginas ni visuales</b> del reporte: esa parte se hace sobre los archivos PBIR.</p></div>
+  </div>
+</section>
+
+<section class="slide" data-sec="3">
+  <div class="eyebrow">Analogía · MCP</div>
+  <h2 style="margin-bottom:10px">El control remoto <em>del modelo</em></h2>
+  <p class="lead step" style="margin:0 0 6px;color:var(--text);max-width:1100px">Ejemplo: quieres <b>crear la medida Margen %</b>.</p>
+  <svg class="analogy" viewBox="0 0 1180 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Analogía del control remoto: tú con el cliente de IA, el control remoto es el servidor MCP con botones-herramienta, y el televisor es tu modelo de Power BI">
+    <defs><marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#F2C811"/></marker></defs>
+    <g class="step">
+      <rect class="bx v" x="0" y="85" width="300" height="120" rx="16"/>
+      <text class="t" x="150" y="122" text-anchor="middle">🙋💬 Tú + Claude</text>
+      <text class="s" x="150" y="148" text-anchor="middle">«Crea la medida Margen %»</text>
+      <text class="s" x="150" y="168" text-anchor="middle">El cliente elige el botón correcto</text>
+      <path class="ln" d="M300 145 L386 145" marker-end="url(#ar2)"/>
+    </g>
+    <g class="step">
+      <rect class="bx g" x="396" y="60" width="330" height="170" rx="20"/>
+      <text class="t" x="561" y="96" text-anchor="middle">🎮 Control remoto · MCP</text>
+      <rect class="btn on" x="426" y="112" width="120" height="30" rx="8"/>
+      <text class="bt on" x="486" y="132" text-anchor="middle">create_measure</text>
+      <rect class="btn" x="556" y="112" width="130" height="30" rx="8"/>
+      <text class="bt" x="621" y="132" text-anchor="middle">validate_dax</text>
+      <rect class="btn" x="426" y="152" width="130" height="30" rx="8"/>
+      <text class="bt" x="491" y="172" text-anchor="middle">list_tables</text>
+      <rect class="btn" x="566" y="152" width="120" height="30" rx="8"/>
+      <text class="bt" x="626" y="172" text-anchor="middle">+ más botones</text>
+      <text class="s" x="561" y="208" text-anchor="middle">cada botón = una herramienta del servidor</text>
+      <path class="ln" d="M726 145 L812 145" marker-end="url(#ar2)"/>
+    </g>
+    <g class="step">
+      <rect class="bx" x="822" y="85" width="358" height="120" rx="16"/>
+      <text class="t" x="1001" y="118" text-anchor="middle">📺 Tu modelo · Power BI Desktop</text>
+      <text class="s" x="1001" y="144" text-anchor="middle">Recibe la orden y cambia de verdad:</text>
+      <text class="s" x="1001" y="164" text-anchor="middle">aparece la medida «Margen %»</text>
+    </g>
+  </svg>
+  <div class="callout step" style="margin-top:4px">El MCP no decide ni piensa: solo <b>aprieta el botón exacto</b> que el cliente de IA le indica, sobre el televisor real.</div>
+  <div class="card step" style="margin-top:14px;padding:16px 20px"><h3 style="margin-bottom:6px">🧭 En resumen</h3><p>Como el motor valida cada botón del MCP al instante, los cambios de <b>modelo</b> son confiables. Para <b>páginas y visuales (PBIR)</b> no hay motor que valide mientras se escribe el JSON: por eso ahí conviene apoyarse en un <b>skill</b> (reglas y ejemplos en <code>AGENTS.md</code>/<code>CLAUDE.md</code>) y siempre confirmar el resultado abriendo Power BI Desktop.</p></div>
+</section>
+
+
+<section class="slide" data-sec="3">
+  <div class="eyebrow">Resumen</div>
+  <h2>Cómo llegamos <em>hasta aquí</em></h2>
+  <div class="tl">
+    <div class="pt step"><div class="dot">1</div><b>2016 · TOM + TMSL</b><span>API y model.bim en JSON</span></div>
+    <div class="pt step"><div class="dot">2</div><b>2023</b><span>TMDL: modelo legible en carpetas</span></div>
+    <div class="pt step"><div class="dot">3</div><b>2023</b><span>PBIP: proyecto de texto</span></div>
+    <div class="pt step"><div class="dot">4</div><b>2024</b><span>TMDL en PBIP + PBIR</span></div>
+    <div class="pt step"><div class="dot">5</div><b>2025</b><span>TMDL view + MCP de modelado</span></div>
+    <div class="pt step"><div class="dot">6</div><b>2026</b><span>PBIR por defecto + GA de PBIP</span></div>
+  </div>
+  <p class="step" style="margin-top:26px"><a class="home next" href="02_lo_que_necesitamos.html" style="margin-left:0;font-size:17px;padding:12px 22px">Siguiente: Lo que necesitamos →</a></p>
+</section>
+
+<section class="slide" data-sec="4">
+  <div class="eyebrow">Referencias · 1 de 3</div>
+  <h2 style="font-size:34px;margin-bottom:18px">Fuentes: .pbix, TMSL, TOM y XMLA</h2>
+  <div class="srcgrid"><div><div class="grp"><h3>.pbix y DataModel</h3><ul><li>DataModel es una copia ABF de Analysis Services: <a href="https://www.powershellgallery.com/packages/Show-PowerPivotModel/1.0.0/Content/Show-PowerPivotModel.ps1" target="_blank" rel="noopener">PowerShell Gallery · Show-PowerPivotModel</a> <span class="c">(comunidad)</span></li><li>DataModel con compresión XPress9; el .pbit trae DataModelSchema: <a href="https://community.fabric.microsoft.com/t5/Desktop/How-to-decompress-DataModel-from-PBIX-file/m-p/524615" target="_blank" rel="noopener">Fabric Community · decompress DataModel</a> <span class="c">(comunidad)</span></li></ul></div><div class="grp"><h3>TMSL</h3><ul><li>Lenguaje JSON que viaja por XMLA: <a href="https://learn.microsoft.com/analysis-services/tmsl/tabular-model-scripting-language-tmsl-reference" target="_blank" rel="noopener">TMSL reference</a></li></ul></div><div class="grp"><h3>TOM</h3><ul><li>Usa XMLA; <code>SaveChanges</code> envía solo lo cambiado: <a href="https://learn.microsoft.com/analysis-services/tom/introduction-to-the-tabular-object-model-tom-in-analysis-services-amo" target="_blank" rel="noopener">Tabular Object Model</a></li></ul></div></div><div><div class="grp"><h3>XMLA y motor local de Desktop</h3><ul><li>Protocolo; TMSL y ASSL por Execute: <a href="https://learn.microsoft.com/analysis-services/xmla/xml-for-analysis-xmla-reference" target="_blank" rel="noopener">XMLA reference</a></li><li>Motor local y herramientas externas: <a href="https://learn.microsoft.com/power-bi/transform-model/desktop-external-tools" target="_blank" rel="noopener">External tools in Power BI Desktop</a></li><li>XMLA local en Desktop (Tabular Editor): <a href="https://tabulareditor.com/blog/the-xmla-endpoint-for-power-bi-how-it-works-and-how-to-use-it" target="_blank" rel="noopener">tabulareditor.com · XMLA endpoint</a> <span class="c">(comunidad)</span></li></ul></div></div></div>
+  <div class="cap" style="display:block;margin-top:10px">Las fuentes marcadas “comunidad” no son documentación oficial de Microsoft.</div>
+</section>
+
+<section class="slide" data-sec="4">
+  <div class="eyebrow">Referencias · 2 de 3</div>
+  <h2 style="font-size:34px;margin-bottom:18px">Fuentes: TMDL, PBIP y PBIR</h2>
+  <div class="srcgrid"><div><div class="grp"><h3>TMDL</h3><ul><li>Anuncio TMDL (preview): <a href="https://powerbi.microsoft.com/blog/announcing-public-preview-of-the-tabular-model-definition-language-tmdl" target="_blank" rel="noopener">powerbi.microsoft.com/blog/announcing-public-preview-of-the-tabular-model-definition-language-tmdl</a></li><li>TMDL GA: <a href="https://powerbi.microsoft.com/blog/announcing-general-availability-of-tabular-model-definition-language-tmdl" target="_blank" rel="noopener">powerbi.microsoft.com/blog/announcing-general-availability-of-tabular-model-definition-language-tmdl</a></li><li>TMDL view GA: <a href="https://powerbi.microsoft.com/blog/tmdl-view-generally-available" target="_blank" rel="noopener">powerbi.microsoft.com/blog/tmdl-view-generally-available</a></li><li>TMDL + VS Code (powerbi.tips, ep. 424)</li><li>Sintaxis y ejemplos: <a href="https://learn.microsoft.com/analysis-services/tmdl/tmdl-overview" target="_blank" rel="noopener">TMDL overview</a></li><li>Vista TMDL en Power BI Desktop: <a href="https://learn.microsoft.com/power-bi/transform-model/desktop-tmdl-view" target="_blank" rel="noopener">Work with TMDL view</a></li><li>Tabla calculada en TMDL (<code>partition … = calculated</code>): <a href="https://community.fabric.microsoft.com/t5/TMDL-Gallery/3-quot-Measure-Tables-quot-With-Icons/m-p/4800221" target="_blank" rel="noopener">Fabric Community · TMDL Gallery</a> <span class="c">(comunidad)</span></li></ul></div><div class="grp"><h3>PBIR</h3><ul><li>PBIR preview: <a href="https://powerbi.microsoft.com/blog/power-bi-enhanced-report-format-pbir-in-power-bi-desktop-developer-mode-preview" target="_blank" rel="noopener">powerbi.microsoft.com/blog/power-bi-enhanced-report-format-pbir-in-power-bi-desktop-developer-mode-preview</a></li><li>PBIR por defecto: <a href="https://powerbi.microsoft.com/blog/pbir-will-become-the-default-power-bi-report-format-get-ready-for-the-transition" target="_blank" rel="noopener">powerbi.microsoft.com/blog/pbir-will-become-the-default-power-bi-report-format-get-ready-for-the-transition</a></li></ul></div></div><div><div class="grp"><h3>PBIP</h3><ul><li>PBIP semantic model folder: <a href="https://learn.microsoft.com/power-bi/developer/projects/projects-dataset" target="_blank" rel="noopener">learn.microsoft.com/power-bi/developer/projects/projects-dataset</a></li><li>Projects overview: <a href="https://learn.microsoft.com/power-bi/developer/projects/projects-overview" target="_blank" rel="noopener">learn.microsoft.com/power-bi/developer/projects/projects-overview</a></li><li>Developer mode (release plan, 14 jun 2023): <a href="https://learn.microsoft.com/power-platform/release-plan/2023wave1/power-bi/power-bi-desktop-developer-mode" target="_blank" rel="noopener">learn.microsoft.com/power-platform/release-plan/2023wave1/power-bi/power-bi-desktop-developer-mode</a></li><li>GA developer mode (MC1465770, 1 sep 2026): <a href="https://mc.merill.net/message/MC1465770" target="_blank" rel="noopener">mc.merill.net/message/MC1465770</a></li></ul></div></div></div>
+</section>
+
+<section class="slide" data-sec="4">
+  <div class="eyebrow">Referencias · 3 de 3</div>
+  <h2 style="font-size:34px;margin-bottom:18px">Fuentes: MCP y herramientas</h2>
+  <div class="srcgrid"><div><div class="grp"><h3>MCP de modelado</h3><ul><li>Modeling MCP: <a href="https://github.com/microsoft/powerbi-modeling-mcp" target="_blank" rel="noopener">github.com/microsoft/powerbi-modeling-mcp</a></li><li>Visión general de MCP servers: <a href="https://learn.microsoft.com/power-bi/developer/mcp/mcp-servers-overview" target="_blank" rel="noopener">learn.microsoft.com/power-bi/developer/mcp/mcp-servers-overview</a></li><li>Anuncio en Ignite: <a href="https://powerbi.microsoft.com/blog/bringing-context-aware-intelligence-to-power-bi" target="_blank" rel="noopener">powerbi.microsoft.com/blog/bringing-context-aware-intelligence-to-power-bi</a></li></ul></div></div><div><div class="grp"><h3>Herramientas externas</h3><ul><li>Tabular Editor 2 vs 3: <a href="https://docs.tabulareditor.com" target="_blank" rel="noopener">docs.tabulareditor.com</a> y <a href="https://tabulareditor.com/what-is-tabular-editor" target="_blank" rel="noopener">tabulareditor.com/what-is-tabular-editor</a></li><li>Herramientas en Power BI (SQLBI): <a href="https://sqlbi.com/articles/tools-in-power-bi" target="_blank" rel="noopener">sqlbi.com/articles/tools-in-power-bi</a></li><li>Measure Killer: Brunner BI (comunidad Fabric) y <a href="https://wingetgui.com/apps/BrunnerBI-MeasureKiller" target="_blank" rel="noopener">wingetgui.com/apps/BrunnerBI-MeasureKiller</a></li><li>Herramientas externas e integración con Desktop: sqlbi.com (artículo sobre herramientas de desarrollo tabular)</li></ul></div></div></div>
+</section>
+
+</main>
+<div class="bar" id="bar"></div>
+<footer><span id="count"></span><span class="hint">Clic / → / Espacio: avanzar · ← : volver · F: pantalla completa</span></footer>
+
+<script>
+(function(){
+  var secs=[["Origen","TMSL y PBIX"],["TMDL","Texto legible"],["PBIP","Proyecto en carpetas"],["IA","MCP y agentes"],["Fuentes","Referencias"]];
+  var nav=document.getElementById("nav");
+  secs.forEach(function(s,i){
+    var d=document.createElement("div");d.className="tab";
+    d.innerHTML='<span class="n">0'+(i+1)+'</span><div><b>'+s[0]+'</b><small>'+s[1]+'</small></div>';
+    d.onclick=function(e){e.stopPropagation();goSec(i)};nav.appendChild(d);
+  });
+  var tabs=[].slice.call(nav.children);
+  var slides=[].slice.call(document.querySelectorAll(".slide"));
+  var si=0, st=0;
+  function steps(i){return [].slice.call(slides[i].querySelectorAll(".step"))}
+  function render(dir){
+    slides.forEach(function(s,i){
+      s.classList.toggle("on",i===si);
+      s.classList.toggle("past",i<si);
+      var ss=steps(i);
+      ss.forEach(function(e,k){e.classList.toggle("show", i<si || (i===si && k<st))});
+    });
+    var sec=+slides[si].dataset.sec;
+    tabs.forEach(function(t,i){t.classList.toggle("on",i===sec);t.classList.toggle("done",i<sec)});
+    document.getElementById("count").textContent=(si+1)+" / "+slides.length;
+    document.getElementById("bar").style.width=((si+1)/slides.length*100)+"%";
+    location.hash="#"+(si+1);
+  }
+  function next(){
+    var n=steps(si).length;
+    if(st<n){st++}else if(si<slides.length-1){si++;st=0}
+    render();
+  }
+  function prev(){
+    if(st>0){st--}else if(si>0){si--;st=steps(si).length}
+    render();
+  }
+  function goSec(i){
+    for(var k=0;k<slides.length;k++){if(+slides[k].dataset.sec===i){si=k;st=0;break}}
+    render();
+  }
+  document.addEventListener("click",function(e){
+    if(e.target.closest("a,button,.copybox")) return;
+    if(String(window.getSelection&&window.getSelection())) return;
+    next();
+  });
+  [].forEach.call(document.querySelectorAll(".copybtn"),function(b){
+    b.addEventListener("click",function(e){
+      e.stopPropagation();
+      var txt=b.closest(".copybox").querySelector("pre").textContent;
+      function ok(){var o=b.textContent;b.textContent="¡Copiado!";setTimeout(function(){b.textContent=o},1500)}
+      function fb(){var t=document.createElement("textarea");t.value=txt;document.body.appendChild(t);t.select();try{document.execCommand("copy");ok()}catch(_){}document.body.removeChild(t)}
+      if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(ok,fb)}else{fb()}
+    });
+  });
+  document.addEventListener("keydown",function(e){
+    if(["ArrowRight","ArrowDown"," ","PageDown","Enter"].indexOf(e.key)>-1){e.preventDefault();next()}
+    else if(["ArrowLeft","ArrowUp","PageUp","Backspace"].indexOf(e.key)>-1){e.preventDefault();prev()}
+    else if(e.key==="f"||e.key==="F"){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()}
+    else if(e.key==="Home"){si=0;st=0;render()}
+    else if(e.key==="End"){si=slides.length-1;st=0;render()}
+  });
+  var h=parseInt(location.hash.slice(1),10); if(h>=1&&h<=slides.length) si=h-1;
+  render();
+})();
+</script>
+</body>
+</html>

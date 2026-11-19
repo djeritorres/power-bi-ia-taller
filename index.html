@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Taller Power BI + IA</title>
+<style>
+:root{--bg:#14151a;--card:rgba(255,255,255,.045);--line:rgba(255,255,255,.12);--gold:#F2C811;--gold-dim:rgba(242,200,17,.16);--text:#f3f4f7;--mute:#9a9ca8}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:"Segoe UI",Inter,system-ui,sans-serif}
+body{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:48px 8vw;
+  background:radial-gradient(900px 500px at 85% 10%,rgba(242,200,17,.12),transparent 60%),radial-gradient(700px 500px at 0% 100%,rgba(168,155,240,.08),transparent 60%),var(--bg)}
+.brand{display:flex;align-items:center;gap:14px;margin-bottom:46px}
+.logo{width:42px;height:42px;border-radius:11px;background:var(--gold);display:grid;place-items:center}
+.logo svg{width:22px;height:22px}
+.brand b{display:block;font-size:18px}.brand small{color:var(--mute);font-size:13px}
+.eyebrow{color:var(--gold);font-weight:800;letter-spacing:.18em;font-size:15px;text-transform:uppercase;margin-bottom:14px}
+h1{font-size:clamp(40px,6vw,82px);line-height:1.05;font-weight:700;letter-spacing:-.01em;max-width:1000px}
+em{color:var(--gold);font-style:normal}
+.lead{color:var(--mute);font-size:clamp(16px,1.6vw,22px);margin-top:22px;max-width:760px;line-height:1.5}
+.btns{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px;margin-top:48px;max-width:1240px}
+a.btn{display:block;text-decoration:none;color:var(--text);background:var(--card);border:1px solid var(--line);border-radius:20px;padding:28px 30px;transition:.25s}
+a.btn:hover{border-color:var(--gold);background:var(--gold-dim);transform:translateY(-4px)}
+a.btn .n{width:34px;height:34px;border-radius:50%;background:var(--gold);color:#14151a;display:grid;place-items:center;font-weight:800;font-size:14px;margin-bottom:16px}
+a.btn h2{font-size:28px;margin-bottom:8px}
+a.btn p{color:var(--mute);font-size:16px;line-height:1.5}
+a.btn span{display:inline-block;margin-top:18px;color:var(--gold);font-weight:700;font-size:15px}
+@media(max-width:700px){.btns{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+  <div class="brand">
+    <div class="logo"><svg viewBox="0 0 24 24" fill="#14151a"><rect x="3" y="12" width="4" height="9" rx="1"/><rect x="10" y="6" width="4" height="15" rx="1"/><rect x="17" y="2" width="4" height="19" rx="1"/></svg></div>
+    <div><b>Power BI + IA · Taller práctico</b><small>Un reporte completo, de los datos a la reportería</small></div>
+  </div>
+  <div class="eyebrow">Taller práctico</div>
+  <h1>Power BI <em>+ IA</em></h1>
+  <p class="lead">La IA se conecta directamente al modelo de datos y hace los cambios ahí mismo, con Claude, ChatGPT y VS Code.</p>
+  <div class="btns">
+    <a class="btn" href="01_historia_tmdl_pbip_ia.html">
+      <div class="n">01</div>
+      <h2>Historia</h2>
+      <p>De TMSL y PBIX hasta TMDL, PBIP y el MCP de modelado. Incluye las herramientas externas del ecosistema.</p>
+      <span>Ver historia →</span>
+    </a>
+    <a class="btn" href="02_lo_que_necesitamos.html">
+      <div class="n">02</div>
+      <h2>Lo que necesitamos</h2>
+      <p>Software, permisos y la conexión de la IA al modelo con Claude, ChatGPT y VS Code.</p>
+      <span>Ver requisitos →</span>
+    </a>
+    <a class="btn" href="03_modelo_y_medidas_con_ia.html">
+      <div class="n">03</div>
+      <h2>Modelo y medidas</h2>
+      <p>Esquema en estrella, calendario y medidas DAX creadas por la IA directamente en el modelo, con validación.</p>
+      <span>Ver modelo →</span>
+    </a>
+  </div>
+</body>
+</html>
