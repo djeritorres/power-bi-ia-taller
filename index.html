@@ -18,14 +18,24 @@ body{min-height:100vh;display:flex;flex-direction:column;justify-content:center;
 h1{font-size:clamp(40px,6vw,82px);line-height:1.05;font-weight:700;letter-spacing:-.01em;max-width:1000px}
 em{color:var(--gold);font-style:normal}
 .lead{color:var(--mute);font-size:clamp(16px,1.6vw,22px);margin-top:22px;max-width:760px;line-height:1.5}
-.btns{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px;margin-top:48px;max-width:1240px}
-a.btn{display:block;text-decoration:none;color:var(--text);background:var(--card);border:1px solid var(--line);border-radius:20px;padding:28px 30px;transition:.25s}
+.layout{display:grid;grid-template-columns:1fr 1.3fr;gap:24px;margin-top:48px;max-width:1320px;align-items:stretch}
+.btns{display:flex;flex-direction:column;gap:22px}
+a.btn{display:block;flex:1;text-decoration:none;color:var(--text);background:var(--card);border:1px solid var(--line);border-radius:20px;padding:28px 30px;transition:.25s}
 a.btn:hover{border-color:var(--gold);background:var(--gold-dim);transform:translateY(-4px)}
 a.btn .n{width:34px;height:34px;border-radius:50%;background:var(--gold);color:#14151a;display:grid;place-items:center;font-weight:800;font-size:14px;margin-bottom:16px}
 a.btn h2{font-size:28px;margin-bottom:8px}
 a.btn p{color:var(--mute);font-size:16px;line-height:1.5}
 a.btn span{display:inline-block;margin-top:18px;color:var(--gold);font-weight:700;font-size:15px}
-@media(max-width:700px){.btns{grid-template-columns:1fr}}
+.speaker{display:flex;align-items:flex-start;gap:28px;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:34px}
+.speaker img{width:170px;height:170px;border-radius:50%;object-fit:cover;object-position:center 20%;border:4px solid var(--gold);flex-shrink:0;margin-top:14px}
+.speaker h3{font-size:28px;margin-bottom:5px}
+.speaker .role{color:var(--gold);font-size:16px;font-weight:700;margin-bottom:14px;line-height:1.4}
+.speaker .bio{color:var(--text);font-size:15px;line-height:1.6;margin-bottom:16px;font-weight:500}
+.speaker ul{list-style:none;display:grid;gap:8px}
+.speaker li{color:var(--mute);font-size:15px;line-height:1.5;padding-left:18px;position:relative}
+.speaker li::before{content:"";position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:50%;background:var(--gold)}
+@media(max-width:900px){.layout{grid-template-columns:1fr}}
+@media(max-width:700px){.speaker{flex-direction:column;align-items:center;text-align:center}.speaker li{text-align:left}}
 </style>
 </head>
 <body>
@@ -36,25 +46,35 @@ a.btn span{display:inline-block;margin-top:18px;color:var(--gold);font-weight:70
   <div class="eyebrow">Taller práctico</div>
   <h1>Power BI <em>+ IA</em></h1>
   <p class="lead">La IA se conecta directamente al modelo de datos y hace los cambios ahí mismo, con Claude, ChatGPT y VS Code.</p>
-  <div class="btns">
-    <a class="btn" href="01_historia_tmdl_pbip_ia.html">
-      <div class="n">01</div>
-      <h2>Historia</h2>
-      <p>De TMSL y PBIX hasta TMDL, PBIP y el MCP de modelado. Incluye las herramientas externas del ecosistema.</p>
-      <span>Ver historia →</span>
-    </a>
-    <a class="btn" href="02_lo_que_necesitamos.html">
-      <div class="n">02</div>
-      <h2>Lo que necesitamos</h2>
-      <p>Software, permisos y la conexión de la IA al modelo con Claude, ChatGPT y VS Code.</p>
-      <span>Ver requisitos →</span>
-    </a>
-    <a class="btn" href="03_modelo_y_medidas_con_ia.html">
-      <div class="n">03</div>
-      <h2>Modelo y medidas</h2>
-      <p>Esquema en estrella, calendario y medidas DAX creadas por la IA directamente en el modelo, con validación.</p>
-      <span>Ver modelo →</span>
-    </a>
+  <div class="layout">
+    <div class="btns">
+      <a class="btn" href="01_historia_tmdl_pbip_ia.html">
+        <div class="n">01</div>
+        <h2>Historia</h2>
+        <p>De TMSL y PBIX hasta TMDL, PBIP y el MCP de modelado. Incluye las herramientas externas del ecosistema.</p>
+        <span>Ver historia →</span>
+      </a>
+      <a class="btn" href="02_lo_que_necesitamos.html">
+        <div class="n">02</div>
+        <h2>Lo que necesitamos</h2>
+        <p>Software, permisos y la conexión de la IA al modelo con Claude, ChatGPT y VS Code.</p>
+        <span>Ver requisitos →</span>
+      </a>
+    </div>
+    <div class="speaker">
+      <img src="deyvit-jeri.png" alt="Deyvit Jeri">
+      <div>
+        <h3>Deyvit Jeri</h3>
+        <div class="role">Consultor y formador de Power BI · Fundador del canal RapidExcel</div>
+        <p class="bio">Ayudo a profesionales y empresas a pasar de hojas de cálculo a modelos de datos sólidos, combinando Power BI, DAX e Inteligencia Artificial para automatizar y acelerar el análisis de negocio.</p>
+        <ul>
+          <li>+9 años de experiencia enseñando Power BI, Excel y DAX a personas de negocio, sin perfil técnico</li>
+          <li>Power BI Consultant en 365 Global Consulting (Reino Unido) desde 2024</li>
+          <li>Consultorías de analítica y modelado de datos para Sisol Salud, Agromercado-MIDAGRI y Wynwood House</li>
+          <li>Creador de contenido en YouTube con el canal RapidExcel, enfocado en Excel, Power BI y productividad</li>
+        </ul>
+      </div>
+    </div>
   </div>
 </body>
 </html>
